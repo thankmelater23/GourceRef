@@ -1,0 +1,447 @@
+/*******************CREATING GROUCE*******************/
+
+//Create Gource
+$ brew update
+$ brew install gource
+
+//Execute force
+$ cd <path to project>
+$ gource
+
+//Script to get users images
+$ curl https://gist.githubusercontent.com/miry/dbf01f5a198060710255/raw/d07db1571a045e057e6d56444943bc798dd91be3/authors_gravatar.pl > authors_gravatar.pl
+
+//Gets avatar
+$ perl authors_gravatar.pl
+//Sets avatar
+$ gource --user-image-dir .git/avatar
+
+/*Linux / Mac
+FFmpeg using x264 codec
+The below command lines will create a video at 60fps using the x264 codec in an mp4 container.
+
+This assumes you have recent version of ffmpeg with libx264 support. Some distributions like Ubuntu do not enable libx264 support by default in ffmpeg (See this thread for various ways to enable libx264 support on Ubuntu). Consult guides for your distribution if this is the case.
+*/
+
+gource -1280x720 -o - | ffmpeg -y -r 60 -f image2pipe -vcodec ppm -i - -vcodec libx264 -preset ultrafast -pix_fmt yuv420p -crf 1 -threads 0 -bf 0 gource.mp4
+
+
+/*******************CONTROLS*******************/
+
+Display Settings
+You can set the screen resolution with -WIDTHxHEIGHT and switch to full-screen mode with -f. To set the view to full-screen 720p:
+
+gource -f -1280x720
+For additional anti-aliasing use the --multi-sampling option.
+
+Camera Controls
+Camera Mode
+Gource has two camera modes:
+
+overview - keeps the entire repository in view.
+track - follows the current active users or the selected user.
+The default mode is 'overview'. To set the camera mode to 'track':
+
+gource --camera-mode track
+You can also toggle the mode in Gource with the V key and the middle mouse button. Pressing Tab cycles though the current visible users.
+
+Panning
+Dragging the left mouse button on the background pans the camera. This will also disable automatic camera movement until you toggle the camera mode. You can also move the camera with the arrow keys.
+
+Rotation
+As of 0.27, Gource will automatically rotate the view to make best use of the available screen space. If this is not to your liking, you can turn this off with --disable-auto-rotate.
+
+You can manually rotate the view by dragging right mouse button on the background. This will also disable automatic camera rotation until you toggle the camera mode.
+
+Zoom
+You can change the maximum zoom distance with the mouse wheel.
+
+Time-line / Chronology
+Seeking
+You can seek to any point in the project using the time-line widget that appears along the bottom of the screen when the mouse passes over it. Mousing over the time-line shows the date at that position in the history file.
+
+Pause
+Pause the action by pressing space. While paused, you can still move the camera around and inspect the details of files and users.
+
+Start / Stop Position
+Use --start-position and --stop-position to specify the period of the project history to display. The argument is a fraction of the total length of the project history file:
+
+gource --start-position 0.5 --stop-position 0.75
+Seconds Per Day
+Seconds per day controls the amount of time Gource will take to display each day in the log file (10 seconds by default).
+
+gource --seconds-per-day 1
+As a convenience, the option --realtime sets seconds-per-day to 60*60*24.
+
+Auto Skip Seconds
+Some projects may have gaps in activity in the span of days or weeks. To avoid the boring bits, Gource will advance to the next entry (after 3 seconds by default) if nothing is happening.
+
+To change the auto skip seconds value:
+
+gource --auto-skip-seconds 1
+The sister command --disable-auto-skip may be used to turn this feature off:
+
+gource --disable-auto-skip
+File Idle Time
+By default, Gource 'expires' files which haven't been touched by a user in the 60 seconds. You can change the amount of time files remain without changing with:
+
+--file-idle-time SECONDS
+To turn expiring files off:
+
+--file-idle-time 0
+File Lag
+Gource doesn't actually apply updates immediately as they come up in the log, instead the user will move towards the area of the new files before adding them. This is easier to follow but it also means if you are using a small value for 'seconds-per-day', it can get quite far behind.
+
+You can change the time limit for files to be added in seconds (default 5) with --max-file-lag SECONDS:
+
+gource --max-file-lag 0.1
+Above, files must appear within 0.1 seconds (100ms).
+
+Appearance
+Legend / File Extension Key
+Pressing K or launching gource with --key enables a file extension key, showing the colours used for each file extension and the current number of files with that extension listed in descending order:
+
+gource --key
+Bloom
+Gource has some command line options to control the appearance of the 'light bloom' effect that appears around directories. You can affect the radius of the bloom using --bloom-multiplier, and the intensity using --bloom-intensity.
+
+To get double the radius and double the normal intensity you would use:
+
+gource --bloom-multiplier 2.0 --bloom-intensity 1.5
+If you're sick of the bloom effect, you can turn it off with --disable-bloom.
+
+Elasticity
+Elasticity is a fun if somewhat pointless effect that controls how 'rubbery' directory branches behave when they have a force applied to them:
+
+gource -e 0.5
+Background
+The background colour can be set with the --background option followed by a colour in hex format (like in HTML):
+
+gource --background 555555
+This will set the background colour to a darkish grey
+
+You can set the alpha channel to be transparent with --transparent. This is useful if you want to take screenshots (F12) and manipulate them in image editing software. Note ppm output does not have an alpha channel so will not be affected.
+
+To set a background image:
+
+gource --background-image background.png
+Colours
+Press S to cycle through alternate colours for files and users. You can also specify an alternate colour hashing 'seed' on the command line with --hash-seed.
+
+Date Format
+Change the strftime format string Gource uses to display the current time (See strftime manual for valid format strings).
+
+gource --date-format "%D"
+Fonts
+You can change the default font size and colour of the timer and titles with:
+
+gource --font-size 18 --font-colour FFFF00
+Logo
+Set a logo to appear in the foreground:
+
+gource --logo logo.png
+The logo position can be changed with --logo-offset XxY.
+
+Title
+Set a title to appear in the bottom left corner of the screen:
+
+gource --title "My Project"
+Hiding Elements
+Sometimes it's hard to see the forest through the trees. To cull the brush:
+
+gource --hide bloom,date,dirnames,files,filenames,mouse,progress,tree,users,usernames
+(your screen should now be blank).
+/*******************OTHER SETTINGS*******************/
+3. Using Gource
+===============
+
+gource <options> <path>
+
+options:
+
+    -h, --help
+            Help ('-H' for extended help).
+
+    -WIDTHxHEIGHT, --viewport WIDTHxHEIGHT
+            Set the viewport size. If -f is also supplied, will attempt to set
+            the video mode to this also. Add ! to make the window non-resizable.
+
+    -f, --fullscreen
+            Fullscreen.
+
+    -w, --windowed
+            Windowed.
+
+    --transparent
+            Make the background transparent. Only really useful for screenshots.
+
+    --start-date 'YYYY-MM-DD hh:mm:ss +tz'
+            Start with the first entry after the supplied date and optional time.
+
+            If a time zone offset isn't specified the local time zone is used.
+
+            Example accepted formats:
+
+                "2012-06-30"
+                "2012-06-30 12:00"
+                "2012-06-30 12:00:00 +12"
+
+    --stop-date 'YYYY-MM-DD hh:mm:ss +tz'
+            Stop after the last entry prior to the supplied date and optional time.
+
+            Uses the same format as --start-date.
+
+    -p, --start-position POSITION
+            Begin at some position in the log (between 0.0 and 1.0 or 'random').
+
+        --stop-position  POSITION
+            Stop (exit) at some position in the log (does not work with STDIN).
+
+    -t, --stop-at-time SECONDS
+            Stop (exit) after a specified number of seconds.
+
+        --stop-at-end
+            Stop (exit) at the end of the log / stream.
+
+        --loop
+            Loop back to the start of the log when the end is reached.
+
+    -a, --auto-skip-seconds SECONDS
+            Skip to next entry if nothing happens for a number of seconds.
+
+    -s, --seconds-per-day SECONDS
+            Speed of simulation in seconds per day.
+
+        --realtime
+            Realtime playback speed.
+
+    -c, --time-scale SCALE
+            Change simulation time scale.
+
+    -i, --file-idle-time SECONDS
+            Time in seconds files remain idle before they are removed or 0
+            for no limit.
+
+    -e, --elasticity FLOAT
+            Elasticity of nodes.
+
+    -b, --background-colour FFFFFF
+            Background colour in hex.
+
+    --background-image IMAGE
+            Set a background image.
+
+    --logo IMAGE
+            Logo to display in the foreground.
+
+    --logo-offset XxY
+            Offset position of the logo.
+
+    --title TITLE
+            Set a title.
+
+    --font-size SIZE
+            Font size used by the date and title.
+
+    --font-colour FFFFFF
+            Font colour used by the date and title in hex.
+
+    --key
+            Show file extension key.
+
+    --date-format FORMAT
+            Specify display date string (strftime format).
+
+    --log-command VCS
+            Show the VCS log command used by gource (git,svn,hg,bzr,cvs2cl).
+
+    --log-format VCS
+            Specify the log format (git,svn,hg,bzr,cvs2cl,custom).
+
+            Required when reading from STDIN.
+
+    --git-branch
+            Get the git log of a branch other than the current one.
+
+    --follow-user USER
+            Have the camera automatically follow a particular user.
+
+    --highlight-dirs
+            Highlight the names of all directories.
+
+    --highlight-user USER
+            Highlight the names of a particular user.
+
+    --highlight-users
+            Highlight the names of all users.
+
+    --highlight-colour FFFFFF
+            Font colour for highlighted users in hex.
+
+    --selection-colour FFFFFF
+            Font colour for selected users and files.
+
+    --dir-colour FFFFFF
+            Font colour for directories.
+
+    --dir-name-depth DEPTH
+            Draw names of directories down to a specific depth in the tree.
+
+    --file-filter REGEX
+            Filter out any files matching a specified regular expression.
+
+    --file-extensions
+            Show filename extensions only.
+
+    --user-filter REGEX
+            Filter out any users matching a specified regular expression.
+
+    --user-image-dir DIRECTORY
+            Directory containing .jpg or .png images of users
+            (eg 'Full Name.png') to use as avatars.
+
+    --default-user-image IMAGE
+            Path of .jpg or .png to use as the default user image.
+
+    --colour-images
+            Colourize user images.
+
+    --crop AXIS
+            Crop view on an axis (vertical,horizontal).
+
+    --padding FLOAT
+            Camera view padding.
+
+    --multi-sampling
+            Enable multi-sampling.
+
+    --no-vsync
+            Disable vsync.
+
+    --bloom-multiplier FLOAT
+            Adjust the amount of bloom.
+
+    --bloom-intensity FLOAT
+            Adjust the intensity of the bloom.
+
+    --max-files NUMBER
+            Set the maximum number of files or 0 for no limit.
+
+            Excess files will be discarded.
+
+    --max-file-lag SECONDS
+            Max time files of a commit can take to appear.
+
+            Use -1 for no limit.
+
+    --max-user-speed UNITS
+            Max speed users can travel per second.
+
+    --user-friction SECONDS
+            Time users take to come to a halt.
+
+    --user-scale SCALE
+            Change scale of users.
+
+    --camera-mode MODE
+            Camera mode (overview,track).
+
+    --disable-auto-rotate
+            Disable automatic camera rotation.
+
+    --hide DISPLAY_ELEMENT
+            Hide one or more display elements from the list below:
+
+            bloom     - bloom effect
+            date      - current date
+            dirnames  - names of directories
+            files     - file icons
+            filenames - names of files
+            mouse     - mouse cursor
+            progress  - progress bar widget
+            root      - root directory of tree
+            tree      - animated tree structure
+            users     - user avatars
+            usernames - names of users
+
+            Separate multiple elements with commas (eg 'mouse,progress')
+
+    --hash-seed SEED
+            Change the seed of hash function.
+
+    --caption-file FILE
+            Caption file (see Caption Log Format).
+
+    --caption-size SIZE
+            Caption size.
+
+    --caption-colour FFFFFF
+            Caption colour in hex.
+
+    --caption-duration SECONDS
+            Caption duration.
+
+    --caption-offset X
+            Caption horizontal offset (0 to centre captions).
+
+    -o, --output-ppm-stream FILE
+            Output a PPM image stream to a file ('-' for STDOUT).
+
+            This will automatically hide the progress bar initially and
+            enable 'stop-at-end' unless other behaviour is specified.
+
+    -r, --output-framerate FPS
+            Framerate of output (25,30,60). Used with --output-ppm-stream.
+
+    --output-custom-log FILE
+            Output a custom format log file ('-' for STDOUT).
+
+    --load-config CONFIG_FILE
+            Load a gource conf file.
+
+    --save-config CONFIG_FILE
+            Save a gource conf file with the current options.
+
+    --path PATH
+
+/*******************INTERACTIVE KEYBOARD COMMANDS*******************/
+    (V)   Toggle camera mode
+    (C)   Displays Gource logo
+    (K)   Toggle file extension key.
+    (M)   Toggle mouse visibility
+    (N)   Jump forward in time to next log entry.
+    (S)   Randomize colours.
+    (+-)  Adjust simulation speed.
+    (<>)  Adjust time scale.
+    (TAB) Cycle through visible users
+    (F12) Screenshot
+    (Alt+Enter) Fullscreen toggle
+    (ESC) Quit
+/*******************FAVORITE SETTINGS*******************/
+gource --key
+
+gource --title "My Project"
+
+gource --seconds-per-day 1
+
+gource --auto-skip-seconds 1
+
+gource --max-file-lag 2.5
+
+
+gource --load-config AndreGourceConfig.conf
+
+gource -—save-config AndreGourceConfig.conf
+
+gource --fullscreen
+
+gource --loop
+
+
+gource --logo /Users/Andre17MacbookPro/Dropbox/BBS/Icon\ Sizes/BangBangStudiosLogo10-2015\ \(iOS\ icons\)/Icon-60@2x.png
+
+//Not sure how to set this speed
+gource --max-user-speed UNIT
+
+/*******************FAVORITE Settings*******************/
+gource --key --seconds-per-day 1 --auto-skip-seconds 1 --max-file-lag 2.5 --fullscreen --logo /Users/Andre17MacbookPro/Dropbox/BBS/Icon\ Sizes/BangBangStudiosLogo10-2015\ \(iOS\ icons\)/Icon-60@2x.png
