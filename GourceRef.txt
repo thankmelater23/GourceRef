@@ -437,6 +437,7 @@ gource --fullscreen
 
 gource --loop
 
+grouse --user-image-dir .git/avatar
 
 gource --logo /Users/Andre17MacbookPro/Dropbox/BBS/Icon\ Sizes/BangBangStudiosLogo10-2015\ \(iOS\ icons\)/Icon-60@2x.png
 
@@ -444,9 +445,13 @@ gource --logo /Users/Andre17MacbookPro/Dropbox/BBS/Icon\ Sizes/BangBangStudiosLo
 gource --max-user-speed UNIT
 
 //Save video
-ffmpeg -y -r 60 -f image2pipe -vcodec ppm -i gource/gource.ppm -vcodec libx264 -preset ultrafast -pix_fmt yuv420p -crf 1 -threads 4 -bf 0 gource/gource.mp4
-
 gource -1280x720 -o - | ffmpeg -y -r 60 -f image2pipe -vcodec ppm -i - -vcodec libx264 -preset ultrafast -pix_fmt yuv420p -crf 1 -threads 0 -bf 0 gource.mp4
 
 /*******************FAVORITE Settings*******************/
-gource --key --seconds-per-day 1 --auto-skip-seconds 1 --max-file-lag 5 --fullscreen --logo /Users/Andre17MacbookPro/Dropbox/BBS/Icon\ Sizes/BangBangStudiosLogo10-2015\ \(iOS\ icons\)/Icon-60@2x.png
+gource  —-title MyFitZ --key --fullscreen --seconds-per-day 1 --max-file-lag 5 --auto-skip-seconds 1 --user-image-dir .git/avatar --logo /Users/Andre17MacbookPro/Dropbox/BBS/Icon\ Sizes/BangBangStudiosLogo10-2015\ \(iOS\ icons\)/Icon-60@2x.png 
+
+//With save
+gource  —-title MyFitZ --key --fullscreen --seconds-per-day 1 --max-file-lag 5 --auto-skip-seconds 1 --user-image-dir .git/avatar --logo /Users/Andre17MacbookPro/Dropbox/BBS/Icon\ Sizes/BangBangStudiosLogo10-2015\ \(iOS\ icons\)/Icon-60@2x.png -1280x720 -o - | ffmpeg -y -r 60 -f image2pipe -vcodec ppm -i - -vcodec libx264 -preset ultrafast -pix_fmt yuv420p -crf 1 -threads 0 -bf 0 MyFitZ.mp4
+
+gource --load-config AndreGourceConfig.conf
+
