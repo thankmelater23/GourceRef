@@ -457,7 +457,6 @@ gource  —-title MyFitZ --key --fullscreen --seconds-per-day 1 --max-file-lag 5
 
 gource --load-config AndreGourceConfig.conf
 
-
 /*******************Last Used Options *Delete* *******************/ 
 gource  —-title MyFitZ --key --fullscreen --seconds-per-day 0.1 --max-file-lag 1.0 --auto-skip-seconds 0.1 --user-image-dir .git/avatar --logo /Users/Andre17MacbookPro/Dropbox/BBS/Icon\ Sizes/BangBangStudiosLogo10-2015\ \(iOS\ icons\)/Icon-60@2x.png --hide bloom,progress,filenames --bloom-multiplier 10.0 --bloom-intensity 10.5 --elasticity 0.1 --max-user-speed 50.0 --file-idle-time 0 -1280x720 -o - | ffmpeg -y -r 60 -f image2pipe -vcodec ppm -i - -vcodec libx264 -preset ultrafast -pix_fmt yuv420p -crf 1 -threads 0 -bf 0 MyFitZ.mp4
 
